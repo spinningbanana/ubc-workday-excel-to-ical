@@ -80,8 +80,8 @@ const FileUpload: React.FC = () => {
 
             try {
                 // values determining which columns to search for information
-                var sectionCol = 7;
-                var schedulesCol = 11;
+                var sectionCol = -1;
+                var schedulesCol = -1;
 
                 // assign columns
                 const header = worksheet.getRow(3);
@@ -92,6 +92,16 @@ const FileUpload: React.FC = () => {
                         schedulesCol = col;
                     }
                 })
+                
+                const foundSectionCol = sectionCol != -1;
+                const foundSchedulesCol = schedulesCol != -1;
+                if (!foundSectionCol || !foundSchedulesCol) {
+                    var err = "Could not find column(s) for: ";
+                    err += !foundSectionCol ? "Section" : "";
+                    err += (!foundSectionCol && !foundSchedulesCol) ? ", " : "";
+                    err += !foundSchedulesCol ? "Meeting Patterns" : "";
+                    throw new Error(err);
+                }
 
                 rows.forEach((row: any) => {
                     // The course could be an online course that doesn't have a schedule
