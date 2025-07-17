@@ -80,15 +80,18 @@ const FileUpload: React.FC = () => {
 
             try {
                 // values determining which columns to search for information
-                var sectionCol = 5;
-                var schedulesCol = 8;
+                var sectionCol = 7;
+                var schedulesCol = 11;
 
-                // check if new columns are present
-                const check = worksheet.getRow(3);
-                if (check && check.getCell(3).value === "Drop" && check.getCell(4).value === "Swap") {
-                    sectionCol = 7;
-                    schedulesCol = 11;
-                }
+                // assign columns
+                const header = worksheet.getRow(3);
+                header.eachCell({ includeEmpty: true }, (cell, col) => {
+                    if (cell.value === "Section") {
+                        sectionCol = col;
+                    } else if (cell.value === "Meeting Patterns") {
+                        schedulesCol = col;
+                    }
+                })
 
                 rows.forEach((row: any) => {
                     // The course could be an online course that doesn't have a schedule
